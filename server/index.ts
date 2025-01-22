@@ -7,6 +7,7 @@ import {
 import type { Context } from "./context";
 import { Hono } from "hono";
 import { authRouter } from "./routes/auth";
+import { getCookie } from "hono/cookie";
 
 const app = new Hono<Context>();
 
@@ -16,13 +17,13 @@ app.get("/", (c) => {
 });
 
 app.use("*", cors(), async (c, next) => {
-  const token = c.get("session");
+  const token = getCookie(c, "session");
   if (!token) {
     c.set("user", null);
     c.set("session", null);
     return next();
   }
-  const { session, user } = await validateSessionToken(token.id);
+  const { session, user } = await validateSessionToken(token);
   if (session) {
     setSessionTokenCookie(c, session.id, session.expiresAt);
   }

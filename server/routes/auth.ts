@@ -7,12 +7,15 @@ import {
   generateSessionToken,
   invalidateSession,
   setSessionTokenCookie,
+  validateSessionToken,
 } from "@/session";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { generateRandomNumber } from "../../lib/generateNumbers";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
+import { loggedIn } from "@/middleware/loggedIn";
+import { getCookie } from "hono/cookie";
 
 export const authRouter = new Hono<Context>()
   .post("/signup", zValidator("form", LoginSchema), async (c) => {
@@ -32,7 +35,7 @@ export const authRouter = new Hono<Context>()
 
       const session = await createSession(token, userId);
 
-      setSessionTokenCookie(c, session?.id, session.expiresAt);
+      setSessionTokenCookie(c, token, session.expiresAt);
 
       return c.json(
         {
@@ -84,9 +87,7 @@ export const authRouter = new Hono<Context>()
 
     const session = await createSession(token, existingUser.id);
 
-    setSessionTokenCookie(c, session?.id, session.expiresAt);
-
-    c.set("session", session);
+    setSessionTokenCookie(c, token, session.expiresAt);
 
     return c.json(
       {
@@ -97,7 +98,9 @@ export const authRouter = new Hono<Context>()
     );
   })
   .get("/logout", async (c) => {
-    const session = c.get("session");
+    const token = getCookie(c, "session");
+    console.log({ token });
+    const { session } = await validateSessionToken(token!);
     if (!session) {
       return c.redirect("/");
     }
@@ -105,4 +108,12 @@ export const authRouter = new Hono<Context>()
     await invalidateSession(session.id);
     deleteSessionTokenCookie(c);
     return c.redirect("/");
+  })
+  .get("/user", loggedIn, async (c) => {
+    const user = c.get("user")!;
+    return c.json({
+      success: true,
+      message: "User fetched",
+      data: { username: user.username },
+    });
   });
