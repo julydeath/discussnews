@@ -4,7 +4,6 @@ import {
   sessionTable,
   userTable,
 } from "./db/schemas/auth.js";
-import { setCookie, deleteCookie } from "hono/cookie";
 
 import {
   encodeBase32LowerCaseNoPadding,
@@ -20,20 +19,17 @@ export function setSessionTokenCookie(
   token: string,
   expiresAt: Date,
 ): void {
-  setCookie(c, "session", token, {
-    httpOnly: true,
-    sameSite: "Lax",
-    expires: expiresAt,
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
+  c.header(
+    "Set-Cookie",
+    `session=${token}; HttpOnly; SameSite=Lax; Expires=${expiresAt.toUTCString()}; Path=/; Secure;`,
+  );
 }
 
 export function deleteSessionTokenCookie(c: Context): void {
-  deleteCookie(c, "session", {
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
+  c.header(
+    "Set-Cookie",
+    "session=; HttpOnly; SameSite=Lax; Max-Age=0; Path=/; Secure;",
+  );
 }
 
 export function generateSessionToken(): string {

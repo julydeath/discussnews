@@ -3,7 +3,7 @@ import type { InferSelectModel } from "drizzle-orm";
 
 export const userTable = pgTable("user", {
   id: serial("id").primaryKey(),
-  username: text("username").notNull(),
+  username: text("username").notNull().unique(),
   password_hash: text("password_hash").notNull(),
 });
 
