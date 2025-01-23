@@ -20,7 +20,6 @@ import { getCookie } from "hono/cookie";
 export const authRouter = new Hono<Context>()
   .post("/signup", zValidator("form", LoginSchema), async (c) => {
     const { username, password } = c.req.valid("form");
-    console.log({ username, password });
     const passwordHash = await Bun.password.hash(password);
     const userId = generateRandomNumber(5);
 
