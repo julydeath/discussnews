@@ -294,7 +294,7 @@ export const postsRouter = new Hono<Context>()
           },
           commentUpvotes: {
             columns: { userId: true },
-            where: eq(commentUpvotesTable.userId, user?.id ?? ""),
+            where: eq(commentUpvotesTable.userId, user?.id ?? 0),
             limit: 1,
           },
           childComments: {
@@ -308,7 +308,7 @@ export const postsRouter = new Hono<Context>()
               },
               commentUpvotes: {
                 columns: { userId: true },
-                where: eq(commentUpvotesTable.userId, user?.id ?? ""),
+                where: eq(commentUpvotesTable.userId, user?.id ?? 0),
                 limit: 1,
               },
             },
