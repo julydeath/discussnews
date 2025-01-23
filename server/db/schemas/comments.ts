@@ -10,7 +10,7 @@ import { commentUpvotesTable } from "./upvotes";
 
 export const commentsTable = pgTable("comments", {
   id: serial("id").primaryKey(),
-  userId: text("user_id").notNull(),
+  userId: integer("user_id").notNull(),
   postId: integer("post_id").notNull(),
   parentCommentId: integer("parent_comment_id"),
   content: text("content").notNull(),

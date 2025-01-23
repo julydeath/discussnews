@@ -10,7 +10,7 @@ import { postUpvotesTable } from "./upvotes";
 
 export const postsTable = pgTable("posts", {
   id: serial("id").primaryKey(),
-  userId: text("user_id").notNull(),
+  userId: integer("user_id").notNull(),
   title: text("title").notNull(),
   url: text("url"),
   content: text("content"),
