@@ -8,6 +8,7 @@ import type { Context } from "./context";
 import { Hono } from "hono";
 import { authRouter } from "./routes/auth";
 import { getCookie } from "hono/cookie";
+import { postsRouter } from "./routes/posts";
 
 const app = new Hono<Context>();
 
@@ -38,7 +39,10 @@ app.use("*", cors(), async (c, next) => {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.basePath("/api").route("/auth", authRouter);
+const routes = app
+  .basePath("/api")
+  .route("/auth", authRouter)
+  .route("/posts", postsRouter);
 
 export default app;
 export type APIRoutes = typeof routes;
