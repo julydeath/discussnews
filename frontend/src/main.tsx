@@ -6,6 +6,8 @@ import ReactDOM from "react-dom/client";
 
 import { routeTree } from "./routeTree.gen";
 
+import "./globals.css";
+
 const queryClient = new QueryClient();
 // Set up a Router instance
 const router = createRouter({
