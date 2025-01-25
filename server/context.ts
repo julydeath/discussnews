@@ -5,6 +5,9 @@ import { z } from "zod";
 import type { Session, User } from "./db/schemas/auth";
 import { insertCommentsSchema } from "./db/schemas/comments";
 import { insertPostSchema } from "./db/schemas/posts";
+import APIRoutes from "./index";
+
+export { type APIRoutes };
 
 export interface Context extends Env {
   Variables: {
