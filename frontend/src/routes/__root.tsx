@@ -3,6 +3,9 @@ import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
+import { Footer } from "@/components/Footer/Footer";
+import { Navbar } from "@/components/Navbar/Navnar";
+
 export const Route = createRootRoute({
   component: RootComponent,
 });
@@ -10,27 +13,15 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <div className="p-2 flex gap-2 text-lg">
-        <Link
-          to="/"
-          activeProps={{
-            className: "font-bold",
-          }}
-          activeOptions={{ exact: true }}
-        >
-          Home
-        </Link>{" "}
-        <Link
-          to="/about"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          About
-        </Link>
+      <div className="flex flex-col min-h-screen">
+        <main className="container mx-auto grow">
+          <Navbar />
+          <Outlet />
+        </main>
+        <footer>
+          <Footer />
+        </footer>
       </div>
-      <hr />
-      <Outlet />
       <ReactQueryDevtools />
       <TanStackRouterDevtools position="bottom-left" />
     </>

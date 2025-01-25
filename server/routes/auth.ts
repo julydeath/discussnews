@@ -1,6 +1,12 @@
+import { Hono } from "hono";
+import { getCookie } from "hono/cookie";
+import { HTTPException } from "hono/http-exception";
+import { eq } from "drizzle-orm";
+
 import { db } from "@/adapter";
 import { LoginSchema, type Context } from "@/context";
 import { userTable } from "@/db/schemas/auth";
+import { loggedIn } from "@/middleware/loggedIn";
 import {
   createSession,
   deleteSessionTokenCookie,
@@ -10,12 +16,8 @@ import {
   validateSessionToken,
 } from "@/session";
 import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
+
 import { generateRandomNumber } from "../../lib/generateNumbers";
-import { HTTPException } from "hono/http-exception";
-import { eq } from "drizzle-orm";
-import { loggedIn } from "@/middleware/loggedIn";
-import { getCookie } from "hono/cookie";
 
 export const authRouter = new Hono<Context>()
   .post("/signup", zValidator("form", LoginSchema), async (c) => {

@@ -1,14 +1,15 @@
+import { Hono } from "hono";
+import { getCookie } from "hono/cookie";
 import { cors } from "hono/cors";
+
+import type { Context } from "./context";
+import { authRouter } from "./routes/auth";
+import { postsRouter } from "./routes/posts";
 import {
   deleteSessionTokenCookie,
   setSessionTokenCookie,
   validateSessionToken,
 } from "./session";
-import type { Context } from "./context";
-import { Hono } from "hono";
-import { authRouter } from "./routes/auth";
-import { getCookie } from "hono/cookie";
-import { postsRouter } from "./routes/posts";
 
 const app = new Hono<Context>();
 
@@ -25,6 +26,7 @@ app.use("*", cors(), async (c, next) => {
     return next();
   }
   const { session, user } = await validateSessionToken(token);
+
   if (session) {
     setSessionTokenCookie(c, session.id, session.expiresAt);
   }
@@ -32,6 +34,7 @@ app.use("*", cors(), async (c, next) => {
     deleteSessionTokenCookie(c);
     return next();
   }
+
   c.set("user", user);
   c.set("session", session);
 
