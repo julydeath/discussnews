@@ -25,7 +25,7 @@ export const SignUp = () => {
     queryFn: getCurrentUser,
   });
 
-  if (username) {
+  if (username?.success) {
     redirect({
       to: "/",
     });

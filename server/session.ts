@@ -1,18 +1,19 @@
-import {
-  type User,
-  type Session,
-  sessionTable,
-  userTable,
-} from "./db/schemas/auth.js";
+import type { Context } from "hono";
+import { eq } from "drizzle-orm";
 
+import { sha256 } from "@oslojs/crypto/sha2";
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding";
-import { sha256 } from "@oslojs/crypto/sha2";
+
 import { db } from "./adapter.js";
-import { eq } from "drizzle-orm";
-import type { Context } from "hono";
+import {
+  sessionTable,
+  userTable,
+  type Session,
+  type User,
+} from "./db/schemas/auth.js";
 
 export function setSessionTokenCookie(
   c: Context,
@@ -36,6 +37,7 @@ export function generateSessionToken(): string {
   const bytes = new Uint8Array(20);
   crypto.getRandomValues(bytes);
   const token = encodeBase32LowerCaseNoPadding(bytes);
+  console.log({ token });
   return token;
 }
 
@@ -44,6 +46,7 @@ export async function createSession(
   userId: number,
 ): Promise<Session> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  console.log("created", { sessionId });
   const session: Session = {
     id: sessionId,
     userId,

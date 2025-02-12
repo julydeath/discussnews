@@ -2,7 +2,13 @@ import { hc } from "hono/client";
 
 import { APIRoutes } from "../../../../server";
 
-const client = hc<APIRoutes>("/");
+const client = hc<APIRoutes>("/", {
+  fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+    fetch(input, {
+      ...init,
+      credentials: "include",
+    }),
+}).api;
 
 export const createUserAccount = async ({
   username,
@@ -12,7 +18,7 @@ export const createUserAccount = async ({
   password: string;
 }) => {
   try {
-    const res = await client.api.auth.signup.$post({
+    const res = await client.auth.signup.$post({
       form: {
         username,
         password,
@@ -42,7 +48,7 @@ export const loginUser = async ({
   password: string;
 }) => {
   try {
-    const res = await client.api.auth.login.$post({
+    const res = await client.auth.login.$post({
       form: {
         username,
         password,
@@ -62,7 +68,7 @@ export const loginUser = async ({
 
 export const getCurrentUser = async () => {
   try {
-    const res = await client.api.auth.user.$get();
+    const res = await client.auth.user.$get();
     if (res.ok) {
       const user = await res.json();
       return user;

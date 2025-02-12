@@ -14,7 +14,6 @@ import {
 const app = new Hono<Context>();
 
 app.get("/", (c) => {
-  console.log("hi");
   return c.text("Hello Hono!");
 });
 
@@ -28,7 +27,7 @@ app.use("*", cors(), async (c, next) => {
   const { session, user } = await validateSessionToken(token);
 
   if (session) {
-    setSessionTokenCookie(c, session.id, session.expiresAt);
+    setSessionTokenCookie(c, token, session.expiresAt);
   }
   if (session === null) {
     deleteSessionTokenCookie(c);

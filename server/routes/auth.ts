@@ -111,10 +111,12 @@ export const authRouter = new Hono<Context>()
     return c.redirect("/");
   })
   .get("/user", loggedIn, async (c) => {
-    const user = c.get("user")!;
+    const token = getCookie(c, "session");
+    console.log({ token });
+    const { user } = await validateSessionToken(token!);
     return c.json({
       success: true,
       message: "User fetched",
-      data: { username: user.username },
+      data: { username: user?.username },
     });
   });

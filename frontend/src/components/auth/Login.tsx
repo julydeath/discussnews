@@ -1,11 +1,14 @@
 import React from "react";
-import { redirect } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { getCurrentUser, loginUser } from "@/api/auth";
+import { loginUser } from "@/api/auth";
 
 export const LogIn = () => {
+  const navigate = useNavigate();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const form = useForm({
     defaultValues: {
       username: "",
@@ -15,21 +18,23 @@ export const LogIn = () => {
       // Do something with form data
       const username = value.username;
       const password = value.password;
-      const data = await loginUser({ username, password });
-      console.log({ data });
+      const res = await loginUser({ username, password });
+
+      if (res.success) {
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
+        router.invalidate();
+        await navigate({ to: "/" });
+        return null;
+      } else {
+        if (!res.isFormError) {
+          alert("Login failed");
+        }
+        form.setErrorMap({
+          onSubmit: res.isFormError ? res.error : "Unexpected error",
+        });
+      }
     },
   });
-
-  const { data: username } = useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentUser,
-  });
-
-  if (username) {
-    redirect({
-      to: "/",
-    });
-  }
 
   return (
     <div>
