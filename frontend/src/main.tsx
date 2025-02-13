@@ -1,5 +1,5 @@
 import React from "react";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createRouter, Link, RouterProvider } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Loader2Icon } from "lucide-react";
@@ -10,6 +10,7 @@ import { routeTree } from "./routeTree.gen";
 import "./globals.css";
 
 import { Notfound } from "./components/NotFound";
+import { Button } from "./components/ui/button";
 
 const queryClient = new QueryClient();
 // Set up a Router instance
@@ -24,6 +25,27 @@ const router = createRouter({
     </div>
   ),
   defaultNotFoundComponent: Notfound,
+  defaultErrorComponent: ({ error }) => (
+    <div className="flex flex-col justify-center items-center text-center p-20">
+      <header className="p-8 text-2xl">
+        <p>Oops Something went wrong</p>
+      </header>
+      <div></div>
+      <footer className="flex gap-2">
+        <Button
+          onClick={() => {
+            router.invalidate();
+          }}
+          variant={"outline"}
+        >
+          Try again
+        </Button>
+        <Button>
+          <Link to="/">Go to home</Link>
+        </Button>
+      </footer>
+    </div>
+  ),
 });
 
 // Register things for typesafety
