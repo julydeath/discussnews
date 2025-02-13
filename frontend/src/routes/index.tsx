@@ -14,6 +14,7 @@ function HomeComponent() {
   const { data: posts } = useQuery({
     queryKey: ["posts"],
     queryFn: getPosts,
+    refetchOnWindowFocus: true,
   });
 
   console.log({ posts });

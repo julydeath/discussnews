@@ -36,12 +36,26 @@ export const getPosts = async () => {
     const res = await client.posts.$get({
       query: {
         page: "1",
-        limit: "5",
+        limit: "10",
       },
     });
     const data = await res.json();
     return data;
     // throw Error("");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const upVotePost = async (id: string) => {
+  try {
+    const res = await client.posts[":id"].upvote.$post({
+      param: {
+        id: id,
+      },
+    });
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }
