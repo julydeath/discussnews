@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+
+import { logoutUser, userQueryOptions } from "@/api/auth";
+
+import { Button } from "../ui/button";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { data: user, isLoading } = useQuery(userQueryOptions());
+
+  const handleLogout = async () => {
+    await logoutUser();
+    // router.invalidate();
+  };
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -77,18 +88,36 @@ export const Navbar = () => {
                 About
               </Link>
             </li>
-            <Link
-              to="/signup"
-              className="mx-2 px-4 py-1 my-1 border border-blue-900 bg-blue-700 text-white item-center rounded-3xl hover:bg-blue-500"
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/login"
-              className="mx-2 space-x-2 my-1 space-y-2 px-4 py-1 border border-black bg-white text-black item-center rounded-3xl hover:bg-gray-200"
-            >
-              Log in
-            </Link>
+
+            {!isLoading && (
+              <>
+                {user ? (
+                  <>
+                    <Button
+                      onClick={() => handleLogout()}
+                      variant={"destructive"}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/signup"
+                      className="mx-2 px-4 py-1 my-1 border border-blue-900 bg-blue-700 text-white item-center rounded-3xl hover:bg-blue-500"
+                    >
+                      Sign up
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="mx-2 space-x-2 my-1 space-y-2 px-4 py-1 border border-black bg-white text-black item-center rounded-3xl hover:bg-gray-200"
+                    >
+                      Log in
+                    </Link>
+                  </>
+                )}
+              </>
+            )}
           </ul>
         </div>
       </div>

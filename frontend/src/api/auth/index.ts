@@ -1,4 +1,5 @@
 import { hc } from "hono/client";
+import { queryOptions } from "@tanstack/react-query";
 
 import { APIRoutes } from "../../../../server";
 
@@ -35,7 +36,7 @@ export const createUserAccount = async ({
     console.log({ error });
     return {
       success: false,
-      message: String(error),
+      error: String(error),
     };
   }
 };
@@ -62,6 +63,17 @@ export const loginUser = async ({
     const data = await res.json();
     return data;
   } catch (error) {
+    return {
+      success: false,
+      error: String(error),
+    };
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    await client.auth.logout.$get();
+  } catch (error) {
     console.log(error);
   }
 };
@@ -78,3 +90,10 @@ export const getCurrentUser = async () => {
     console.log({ error });
   }
 };
+
+export const userQueryOptions = () =>
+  queryOptions({
+    queryKey: ["user"],
+    queryFn: getCurrentUser,
+    staleTime: Infinity,
+  });

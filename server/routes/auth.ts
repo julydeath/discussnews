@@ -53,9 +53,13 @@ export const authRouter = new Hono<Context>()
         "code" in error &&
         error.code === "23505"
       ) {
-        throw new HTTPException(409, { message: "Username already exits" });
+        throw new HTTPException(409, {
+          message: "Username already exits",
+        });
       }
-      throw new HTTPException(500, { message: "Failed to create user" });
+      throw new HTTPException(500, {
+        message: "Failed to create user",
+      });
     }
   })
   .post("/login", zValidator("form", LoginSchema), async (c) => {
@@ -69,7 +73,7 @@ export const authRouter = new Hono<Context>()
 
     if (!existingUser) {
       throw new HTTPException(401, {
-        message: "Incorrect username",
+        message: "User not found",
       });
     }
 
@@ -100,7 +104,6 @@ export const authRouter = new Hono<Context>()
   })
   .get("/logout", async (c) => {
     const token = getCookie(c, "session");
-    console.log({ token });
     const { session } = await validateSessionToken(token!);
     if (!session) {
       return c.redirect("/");

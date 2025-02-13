@@ -13,10 +13,6 @@ import {
 
 const app = new Hono<Context>();
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
-
 app.use("*", cors(), async (c, next) => {
   const token = getCookie(c, "session");
   if (!token) {

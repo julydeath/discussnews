@@ -3,6 +3,8 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
+import { Toaster } from "sonner";
+
 import { Footer } from "@/components/Footer/Footer";
 import { Navbar } from "@/components/Navbar/Navnar";
 
@@ -22,6 +24,7 @@ function RootComponent() {
           <Footer />
         </footer>
       </div>
+      <Toaster />
       <ReactQueryDevtools />
       <TanStackRouterDevtools position="bottom-left" />
     </>
