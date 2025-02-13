@@ -47,6 +47,20 @@ export const getPosts = async () => {
   }
 };
 
+export const getPostById = async (id: string) => {
+  try {
+    const res = await client.posts[":id"].$get({
+      param: {
+        id: id,
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const upVotePost = async (id: string) => {
   try {
     const res = await client.posts[":id"].upvote.$post({
@@ -59,4 +73,34 @@ export const upVotePost = async (id: string) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const commentPost = async (id: string, content: string) => {
+  try {
+    const res = await client.posts[":id"].comment.$post({
+      param: {
+        id: id,
+      },
+      form: {
+        content: content,
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostComments = async (id: string) => {
+  const res = await client.posts[":id"].comments.$get({
+    param: {
+      id: id,
+    },
+    query: {},
+  });
+
+  const data = res.json();
+
+  return data;
 };

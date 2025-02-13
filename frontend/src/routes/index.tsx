@@ -8,6 +8,7 @@ import PostCard from "@/components/Home/PostCard";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
+  loader: () => getPosts(),
 });
 
 function HomeComponent() {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { upVotePost } from "@/api/posts";
 import { ArrowUp } from "lucide-react";
@@ -39,13 +40,6 @@ const PostCard = ({ post, index }: { post: Post; index: number }) => {
       <div>{index}.</div>
       <div className="flex flex-col">
         <div className="flex items-center">
-          {/* {!post.isUpvoted && (
-            <ArrowUp
-              className="cursor-pointer"
-              onClick={() => handleUpvote()}
-              size={20}
-            />
-          )} */}
           {!post.isUpvoted && !isUpvoted && (
             <ArrowUp
               className="cursor-pointer"
@@ -68,7 +62,14 @@ const PostCard = ({ post, index }: { post: Post; index: number }) => {
               day: "numeric",
             })}{" "}
           </div>
-          <div>{post.commentCount} comments</div>
+          <Link
+            to="/post/$postId"
+            className="cursor-pointer"
+            params={{ postId: post.id.toString() }}
+          >
+            {" "}
+            {post.commentCount} comments
+          </Link>
         </div>
       </div>
     </div>
