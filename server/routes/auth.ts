@@ -34,9 +34,9 @@ export const authRouter = new Hono<Context>()
 
       const token = generateSessionToken();
 
-      const session = await createSession(token, userId);
+      await createSession(token, userId);
 
-      setSessionTokenCookie(c, token, session.expiresAt);
+      // setSessionTokenCookie(c, token, session.expiresAt);
 
       return c.json(
         {

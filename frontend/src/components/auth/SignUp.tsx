@@ -1,8 +1,9 @@
 import React from "react";
-import { Link, redirect } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 
 import { createUserAccount } from "@/api/auth";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "../ui/button";
@@ -15,6 +16,7 @@ const SignUpSchema = z.object({
 });
 
 export const SignUp = () => {
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       username: "",
@@ -25,10 +27,13 @@ export const SignUp = () => {
       const username = value.username;
       const password = value.password;
       const res = await createUserAccount({ username, password });
-      if (res.ok) {
-        redirect({ to: "/" });
+      console.log({ res });
+      if (res.success) {
+        toast.success("User created", { description: res.message });
+        // redirect({ to: "/" });
+        await navigate({ to: "/" });
       } else {
-        console.log({ res });
+        toast.error("Signup Failed", { description: res.error });
       }
     },
     validators: {

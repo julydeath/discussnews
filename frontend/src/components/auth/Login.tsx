@@ -30,11 +30,9 @@ export const LogIn = () => {
       onChange: LogInSchema,
     },
     onSubmit: async ({ value }) => {
-      // Do something with form data
       const username = value.username;
       const password = value.password;
       const res = await loginUser({ username, password });
-      console.log({ res });
 
       if (res.success) {
         await queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -51,17 +49,6 @@ export const LogIn = () => {
         // });
         toast.error("Login failed", { description: res.error });
       }
-
-      // try {
-      //   await loginUser({ username, password });
-      //   await queryClient.invalidateQueries({ queryKey: ["user"] });
-      //   router.invalidate();
-      //   await navigate({ to: "/" });
-      //   return null;
-      // } catch (error) {
-      //   // toast.error("Login failed", { description: res.error });
-      //   console.log(error);
-      // }
     },
   });
 

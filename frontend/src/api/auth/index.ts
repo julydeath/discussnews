@@ -70,14 +70,6 @@ export const loginUser = async ({
   }
 };
 
-export const logoutUser = async () => {
-  try {
-    await client.auth.logout.$get();
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getCurrentUser = async () => {
   try {
     const res = await client.auth.user.$get();

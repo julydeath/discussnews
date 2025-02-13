@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { logoutUser, userQueryOptions } from "@/api/auth";
+import { userQueryOptions } from "@/api/auth";
 
 import { Button } from "../ui/button";
 
@@ -11,10 +11,6 @@ export const Navbar = () => {
 
   const { data: user, isLoading } = useQuery(userQueryOptions());
 
-  const handleLogout = async () => {
-    await logoutUser();
-    // router.invalidate();
-  };
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -93,11 +89,8 @@ export const Navbar = () => {
               <>
                 {user ? (
                   <>
-                    <Button
-                      onClick={() => handleLogout()}
-                      variant={"destructive"}
-                    >
-                      Logout
+                    <Button variant={"destructive"}>
+                      <a href="api/auth/logout">Logout</a>
                     </Button>
                   </>
                 ) : (
