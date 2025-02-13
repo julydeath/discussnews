@@ -1,9 +1,7 @@
 import React from "react";
-import { redirect } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import { useQuery } from "@tanstack/react-query";
 
-import { createUserAccount, getCurrentUser } from "@/api/auth";
+import { createUserAccount } from "@/api/auth";
 
 export const SignUp = () => {
   const form = useForm({
@@ -19,17 +17,6 @@ export const SignUp = () => {
       console.log({ data });
     },
   });
-
-  const { data: username } = useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentUser,
-  });
-
-  if (username?.success) {
-    redirect({
-      to: "/",
-    });
-  }
 
   return (
     <div>

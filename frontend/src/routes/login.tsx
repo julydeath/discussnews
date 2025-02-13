@@ -8,7 +8,6 @@ export const Route = createFileRoute("/login")({
   component: LogIn,
   beforeLoad: async () => {
     const user = await getCurrentUser();
-
     console.log({ user });
     if (user?.success) {
       throw redirect({ to: "/" });
