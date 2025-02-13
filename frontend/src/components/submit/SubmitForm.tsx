@@ -1,55 +1,59 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 
-import { createUserAccount } from "@/api/auth";
+import { createPost } from "@/api/posts";
 import { toast } from "sonner";
-import * as z from "zod";
+import { z } from "zod";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
-const SignUpSchema = z.object({
-  username: z.string().min(3, { message: "min length must 3" }),
-  password: z.string().nonempty("Password is required"),
+const CreatePostSchema = z.object({
+  title: z.string().min(3, { message: "Title must be atleast 3 chars" }),
+  url: z
+    .string()
+    .trim()
+    .url({ message: "URL must be a valid URL" })
+    .optional()
+    .or(z.literal("")),
+  content: z.string().optional(),
 });
 
-export const SignUp = () => {
-  const navigate = useNavigate();
+const SubmitForm = () => {
   const form = useForm({
     defaultValues: {
-      username: "",
-      password: "",
-    },
-    onSubmit: async ({ value }) => {
-      // Do something with form data
-      const username = value.username;
-      const password = value.password;
-      const res = await createUserAccount({ username, password });
-      console.log({ res });
-      if (res.success) {
-        toast.success("User created", { description: res.message });
-        // redirect({ to: "/" });
-        await navigate({ to: "/" });
-      } else {
-        toast.error("Signup Failed", { description: res.error });
-      }
+      title: "",
+      url: "",
+      content: "",
     },
     validators: {
-      onChange: SignUpSchema,
+      onChange: CreatePostSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const res: any = await createPost({
+        title: value.title,
+        url: value.url,
+        content: value.content,
+      });
+      console.log({ res });
+      if (res.success) {
+        toast.success("Success", { description: res.message });
+        value.title = "";
+        value.url = "";
+        value.content = "";
+        return null;
+      } else {
+        toast.error("Error", { description: res.message });
+      }
     },
   });
-
   return (
-    <div className="flex flex-col justify-center items-center h-[80vh]">
-      <div className="w-lg mg:w-2xl border border-gray-200 p-6 rounded-xl">
-        <div className="text-center  pt-4 text-2xl md:text-4xl text-gray-700">
-          Welcome
-        </div>
-        <div className="text-center py-2 text-md md:text-lg text-gray-700">
-          Sign up to get started.
-        </div>
+    <div className="w-xl md:w-4xl mx-auto flex flex-col justify-center h-[80vh] item center">
+      <div className="text-3xl font-medium">Create Post</div>
+      <div>
         <div className="flex flex-col">
           <form
             onSubmit={(e) => {
@@ -58,14 +62,14 @@ export const SignUp = () => {
               form.handleSubmit();
             }}
           >
-            <div className="py-6">
+            <div className="my-6">
               <form.Field
-                name="username"
+                name="title"
                 // eslint-disable-next-line react/no-children-prop
                 children={(field) => (
                   <>
                     <Label className="pb-2" htmlFor="username">
-                      Username
+                      Title
                     </Label>
                     <Input
                       name={field.name}
@@ -73,7 +77,31 @@ export const SignUp = () => {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="Enter username"
+                      placeholder="Enter title"
+                    />
+                    {field.state.meta.errors ? (
+                      <em role="alert" className="text-destructive">
+                        {field.state.meta.errors.join(", ")}
+                      </em>
+                    ) : null}
+                  </>
+                )}
+              />
+            </div>
+            <div className="my-6">
+              <form.Field
+                name="url"
+                // eslint-disable-next-line react/no-children-prop
+                children={(field) => (
+                  <>
+                    <Label htmlFor="url">Url</Label>
+                    <Input
+                      name={field.name}
+                      type="text"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="Enter url"
                     />
                     {field.state.meta.errors ? (
                       <em role="alert" className="text-destructive">
@@ -86,18 +114,17 @@ export const SignUp = () => {
             </div>
             <div>
               <form.Field
-                name="password"
+                name="content"
                 // eslint-disable-next-line react/no-children-prop
                 children={(field) => (
                   <>
-                    <Label htmlFor="password">Password</Label>
-                    <Input
+                    <Label htmlFor="url">Content</Label>
+                    <Textarea
                       name={field.name}
-                      type="password"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="Enter password"
+                      placeholder="Enter content"
                     />
                     {field.state.meta.errors ? (
                       <em role="alert" className="text-destructive">
@@ -128,21 +155,15 @@ export const SignUp = () => {
                   type="submit"
                   disabled={!canSubmit}
                 >
-                  {isSubmitting ? "..." : "Signup"}
+                  {isSubmitting ? "..." : "submit"}
                 </Button>
               )}
             />
           </form>
         </div>
       </div>
-      <div>
-        <p className="p-4">
-          Already have account?{"  "}
-          <Link className="underline text-gray-500" to={"/login"}>
-            Login here
-          </Link>
-        </p>
-      </div>
     </div>
   );
 };
+
+export default SubmitForm;

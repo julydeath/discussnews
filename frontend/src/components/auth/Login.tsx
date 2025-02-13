@@ -149,7 +149,7 @@ export const LogIn = () => {
       <div>
         <p className="p-4">
           Don&apos;t have account?{"  "}
-          <Link style={{ color: "gray" }} to={"/signup"}>
+          <Link className="underline text-gray-500" to={"/signup"}>
             Create here
           </Link>
         </p>

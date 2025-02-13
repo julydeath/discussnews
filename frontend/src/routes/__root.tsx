@@ -15,7 +15,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="mx-auto max-w-screen-xl flex flex-col min-h-screen">
         <main className="container mx-auto grow">
           <Navbar />
           <Outlet />
