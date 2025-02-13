@@ -30,3 +30,19 @@ export const createPost = async ({
     return error;
   }
 };
+
+export const getPosts = async () => {
+  try {
+    const res = await client.posts.$get({
+      query: {
+        page: "1",
+        limit: "5",
+      },
+    });
+    const data = await res.json();
+    return data;
+    // throw Error("");
+  } catch (error) {
+    console.log(error);
+  }
+};
