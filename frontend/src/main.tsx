@@ -9,6 +9,8 @@ import { routeTree } from "./routeTree.gen";
 
 import "./globals.css";
 
+import { Notfound } from "./components/NotFound";
+
 const queryClient = new QueryClient();
 // Set up a Router instance
 const router = createRouter({
@@ -21,7 +23,7 @@ const router = createRouter({
       <Loader2Icon className="animate-spin" />
     </div>
   ),
-  // defaultNotFoundComponent: () =>
+  defaultNotFoundComponent: Notfound,
 });
 
 // Register things for typesafety
